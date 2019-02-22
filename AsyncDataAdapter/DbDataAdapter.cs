@@ -318,7 +318,7 @@ namespace AsyncDataAdapter
             {
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillSchemaAsync(dataTable, schemaType, selectCmd, cmdBehavior); // MDAC 67666
+                return await FillSchemaAsync(dataTable, schemaType, selectCmd, cmdBehavior).ConfigureAwait (false); // MDAC 67666
             }
             finally
             {
@@ -338,7 +338,7 @@ namespace AsyncDataAdapter
                     return new DataTable[0]; // design-time support
                 }
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillSchemaAsync(dataSet, schemaType, command, DbDataAdapter.DefaultSourceTableName, cmdBehavior);
+                return await FillSchemaAsync(dataSet, schemaType, command, DbDataAdapter.DefaultSourceTableName, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -354,7 +354,7 @@ namespace AsyncDataAdapter
             {
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillSchemaAsync(dataSet, schemaType, selectCmd, srcTable, cmdBehavior);
+                return await FillSchemaAsync(dataSet, schemaType, selectCmd, srcTable, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -384,7 +384,7 @@ namespace AsyncDataAdapter
                 {
                     throw ADP.MissingSelectCommand(ADP.FillSchema);
                 }
-                return (DataTable[]) await FillSchemaInternalAsync(dataSet, null, schemaType, command, srcTable, behavior);
+                return (DataTable[]) await FillSchemaInternalAsync(dataSet, null, schemaType, command, srcTable, behavior).ConfigureAwait (false);
             }
             finally
             {
@@ -416,7 +416,7 @@ namespace AsyncDataAdapter
                 {
                     srcTableName = TableMappings[index].SourceTable;
                 }
-                return (DataTable) await FillSchemaInternalAsync(null, dataTable, schemaType, command, srcTableName, behavior | CommandBehavior.SingleResult);
+                return (DataTable) await FillSchemaInternalAsync(null, dataTable, schemaType, command, srcTableName, behavior | CommandBehavior.SingleResult).ConfigureAwait (false);
             }
             finally
             {
@@ -440,11 +440,11 @@ namespace AsyncDataAdapter
                     {
                         if (null != datatable)
                         { // delegate to next set of protected FillSchema methods
-                            dataTables = await FillSchemaAsync(datatable, schemaType, dataReader);
+                            dataTables = await FillSchemaAsync(datatable, schemaType, dataReader).ConfigureAwait (false);
                         }
                         else
                         {
-                            dataTables = await FillSchemaAsync(dataset, schemaType, srcTable, dataReader);
+                            dataTables = await FillSchemaAsync(dataset, schemaType, srcTable, dataReader).ConfigureAwait (false);
                         }
                     }
                 }
@@ -473,7 +473,7 @@ namespace AsyncDataAdapter
                 // delegate to Fill4
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillAsync(dataSet, 0, 0, DbDataAdapter.DefaultSourceTableName, selectCmd, cmdBehavior);
+                return await FillAsync(dataSet, 0, 0, DbDataAdapter.DefaultSourceTableName, selectCmd, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -490,7 +490,7 @@ namespace AsyncDataAdapter
                 // delegate to Fill4
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillAsync(dataSet, 0, 0, srcTable, selectCmd, cmdBehavior);
+                return await FillAsync(dataSet, 0, 0, srcTable, selectCmd, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -507,7 +507,7 @@ namespace AsyncDataAdapter
                 // delegate to Fill4
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillAsync(dataSet, startRecord, maxRecords, srcTable, selectCmd, cmdBehavior);
+                return await FillAsync(dataSet, startRecord, maxRecords, srcTable, selectCmd, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -541,7 +541,7 @@ namespace AsyncDataAdapter
                 {
                     throw ADP.MissingSelectCommand(ADP.Fill);
                 }
-                return await FillInternalAsync(dataSet, null, startRecord, maxRecords, srcTable, command, behavior);
+                return await FillInternalAsync(dataSet, null, startRecord, maxRecords, srcTable, command, behavior).ConfigureAwait (false);
             }
             finally
             {
@@ -561,7 +561,7 @@ namespace AsyncDataAdapter
                 DataTable[] dataTables = new DataTable[1] { dataTable };
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillAsync(dataTables, 0, 0, selectCmd, cmdBehavior);
+                return await FillAsync(dataTables, 0, 0, selectCmd, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -578,7 +578,7 @@ namespace AsyncDataAdapter
                 // delegate to Fill8
                 IDbCommand selectCmd = _IDbDataAdapter.SelectCommand;
                 CommandBehavior cmdBehavior = FillCommandBehavior;
-                return await FillAsync(dataTables, startRecord, maxRecords, selectCmd, cmdBehavior);
+                return await FillAsync(dataTables, startRecord, maxRecords, selectCmd, cmdBehavior).ConfigureAwait (false);
             }
             finally
             {
@@ -594,7 +594,7 @@ namespace AsyncDataAdapter
             {
                 // delegate to Fill8
                 DataTable[] dataTables = new DataTable[1] { dataTable };
-                return await FillAsync(dataTables, 0, 0, command, behavior);
+                return await FillAsync(dataTables, 0, 0, command, behavior).ConfigureAwait (false);
             }
             finally
             {
@@ -632,7 +632,7 @@ namespace AsyncDataAdapter
                 {
                     behavior |= CommandBehavior.SingleResult;
                 }
-                return await FillInternalAsync(null, dataTables, startRecord, maxRecords, null, command, behavior);
+                return await FillInternalAsync(null, dataTables, startRecord, maxRecords, null, command, behavior).ConfigureAwait (false);
             }
             finally
             {
@@ -658,21 +658,21 @@ namespace AsyncDataAdapter
 
                 try
                 {
-                    originalState = await QuietOpenAsync((DbConnection)activeConnection);
+                    originalState = await QuietOpenAsync((DbConnection)activeConnection).ConfigureAwait (false);
                     behavior |= CommandBehavior.SequentialAccess;
 
                     IDataReader dataReader = null;
                     try
                     {
-                        dataReader = await ((DbCommand)command).ExecuteReaderAsync(behavior);
+                        dataReader = await ((DbCommand)command).ExecuteReaderAsync(behavior).ConfigureAwait (false);
 
                         if (null != datatables)
                         { // delegate to next set of protected Fill methods
-                            rowsAddedToDataSet = await FillAsync(datatables, dataReader, startRecord, maxRecords);
+                            rowsAddedToDataSet = await FillAsync(datatables, dataReader, startRecord, maxRecords).ConfigureAwait (false);
                         }
                         else
                         {
-                            rowsAddedToDataSet = await FillAsync(dataset, srcTable, dataReader, startRecord, maxRecords);
+                            rowsAddedToDataSet = await FillAsync(dataset, srcTable, dataReader, startRecord, maxRecords).ConfigureAwait (false);
                         }
                     }
                     finally
@@ -880,7 +880,7 @@ namespace AsyncDataAdapter
             //if (!TableMappings.Contains(DbDataAdapter.DefaultSourceTableName)) { // MDAC 59268
             //    throw ADP.UpdateRequiresSourceTable(DbDataAdapter.DefaultSourceTableName);
             //}
-            return await UpdateAsync(dataSet, DbDataAdapter.DefaultSourceTableName);
+            return await UpdateAsync(dataSet, DbDataAdapter.DefaultSourceTableName).ConfigureAwait (false);
         }
 
         public async Task<int> UpdateAsync(DataRow[] dataRows)
@@ -911,7 +911,7 @@ namespace AsyncDataAdapter
                     if (null != dataTable)
                     {
                         DataTableMapping tableMapping = GetTableMapping(dataTable);
-                        rowsAffected = await UpdateAsync(dataRows, tableMapping);
+                        rowsAffected = await UpdateAsync(dataRows, tableMapping).ConfigureAwait (false);
                     }
                 }
                 return rowsAffected;
@@ -947,7 +947,7 @@ namespace AsyncDataAdapter
                     }
                     tableMapping = new DataTableMapping(DbDataAdapter.DefaultSourceTableName, dataTable.TableName);
                 }
-                return await UpdateFromDataTableAsync(dataTable, tableMapping);
+                return await UpdateFromDataTableAsync(dataTable, tableMapping).ConfigureAwait (false);
             }
             finally
             {
@@ -985,7 +985,7 @@ namespace AsyncDataAdapter
                 DataTable dataTable = tableMapping.GetDataTableBySchemaAction(dataSet, schemaAction);
                 if (null != dataTable)
                 {
-                    rowsAffected = await UpdateFromDataTableAsync(dataTable, tableMapping);
+                    rowsAffected = await UpdateFromDataTableAsync(dataTable, tableMapping).ConfigureAwait (false);
                 }
                 else if (!HasTableMappings() || (-1 == TableMappings.IndexOf(tableMapping)))
                 {
@@ -1249,7 +1249,7 @@ namespace AsyncDataAdapter
                                 {
                                     IDbConnection connection = DbDataAdapter.GetConnection1(this);
 
-                                    ConnectionState state = await UpdateConnectionOpenAsync(connection, StatementType.Batch, connections, connectionStates, useSelectConnectionState);
+                                    ConnectionState state = await UpdateConnectionOpenAsync(connection, StatementType.Batch, connections, connectionStates, useSelectConnectionState).ConfigureAwait (false);
                                     rowUpdatedEvent.AdapterInit(rowBatch);
 
                                     if (ConnectionState.Open == state)
@@ -1266,7 +1266,7 @@ namespace AsyncDataAdapter
                                 else if (null != dataCommand)
                                 {
                                     IDbConnection connection = DbDataAdapter.GetConnection4(this, dataCommand, statementType, isCommandFromRowUpdating);
-                                    ConnectionState state = await UpdateConnectionOpenAsync(connection, statementType, connections, connectionStates, useSelectConnectionState);
+                                    ConnectionState state = await UpdateConnectionOpenAsync(connection, statementType, connections, connectionStates, useSelectConnectionState).ConfigureAwait (false);
                                     if (ConnectionState.Open == state)
                                     {
                                         UpdateRowExecute(rowUpdatedEvent, dataCommand, statementType);
@@ -1347,7 +1347,7 @@ namespace AsyncDataAdapter
                             {
                                 IDbConnection connection = DbDataAdapter.GetConnection1(this);
 
-                                ConnectionState state = await UpdateConnectionOpenAsync(connection, StatementType.Batch, connections, connectionStates, useSelectConnectionState);
+                                ConnectionState state = await UpdateConnectionOpenAsync(connection, StatementType.Batch, connections, connectionStates, useSelectConnectionState).ConfigureAwait (false);
 
                                 DataRow[] finalRowBatch = rowBatch;
 
@@ -1528,7 +1528,7 @@ namespace AsyncDataAdapter
                 connections[index] = connection;
                 connectionStates[index] = ConnectionState.Closed; // required, open may throw
 
-                connectionStates[index] = await QuietOpenAsync((DbConnection)connection);
+                connectionStates[index] = await QuietOpenAsync((DbConnection)connection).ConfigureAwait (false);
 
                 if (useSelectConnectionState && (connections[0] == connection))
                 {
@@ -1544,7 +1544,7 @@ namespace AsyncDataAdapter
             DataRow[] dataRows = ADP.SelectAdapterRows(dataTable, false);
             if ((null != dataRows) && (0 < dataRows.Length))
             {
-                rowsAffected = await UpdateAsync(dataRows, tableMapping);
+                rowsAffected = await UpdateAsync(dataRows, tableMapping).ConfigureAwait (false);
             }
             return rowsAffected;
         }
@@ -1883,7 +1883,7 @@ namespace AsyncDataAdapter
             var originalState = connection.State;
             if (ConnectionState.Closed == originalState)
             {
-                await connection.OpenAsync();
+                await connection.OpenAsync().ConfigureAwait (false);
             }
             return originalState;
         }
